@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dubbo Fuel Pilot</title>
+
+    <!-- This links your app configuration and offline engine together -->
+    <link rel="manifest" href="manifest.json">
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+
     <!-- Tailwind CSS for clean, high-contrast Car UI styling -->
     <script src="https://jsdelivr.net"></script>
     <style>
@@ -87,3 +96,4 @@
     </script>
 </body>
 </html>
+
