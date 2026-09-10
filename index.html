@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dubbo Fuel Pilot</title>
 
-    <!-- This links your app configuration and offline engine together -->
+    <!-- RIGHT HERE: This is the script tag that connects your sw.js file -->
     <link rel="manifest" href="manifest.json">
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js');
         }
     </script>
+    <!-- End of script tag section -->
 
     <!-- Tailwind CSS for clean, high-contrast Car UI styling -->
     <script src="https://jsdelivr.net"></script>
