@@ -34,9 +34,25 @@
             align-items: center;
             margin-bottom: 16px;
         }
-        h1 { margin: 0; font-size: 14px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
-        .sector-title { margin: 4px 0 0 0; font-size: 24px; font-weight: 800; color: #f59e0b; }
-        .admin-toggle { background: none; border: none; font-size: 24px; cursor: pointer; }
+        h1 { margin: 0; font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+        .sector-title { margin: 4px 0 0 0; font-size: 22px; font-weight: 800; color: #f59e0b; }
+        
+        /* New explicit, text-based button styling */
+        .admin-toggle-btn { 
+            background-color: #334155; 
+            color: #f59e0b;
+            border: 1px solid #475569; 
+            font-size: 11px; 
+            font-weight: bold;
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer; 
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .admin-toggle-btn:active {
+            background-color: #475569;
+        }
         
         /* Station Cards */
         .station-card {
@@ -71,15 +87,15 @@
             text-decoration: none;
             font-size: 12px;
             font-weight: bold;
-            padding: 6px 12px;
+            padding: 8px 14px;
             border-radius: 6px;
-            margin-top: 8px;
+            margin-top: 10px;
             display: inline-block;
         }
 
         /* Admin Update Panel Layout */
         .admin-panel {
-            background-color: #0f172a;
+            background-color: #1e293b;
             border: 2px dashed #f59e0b;
             padding: 16px;
             border-radius: 12px;
@@ -87,14 +103,14 @@
             display: none;
         }
         .admin-title { font-size: 16px; font-weight: bold; color: #f59e0b; margin-top: 0; margin-bottom: 12px; }
-        .input-group { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .input-group { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .input-group label { font-size: 14px; font-weight: bold; }
         .price-input {
-            width: 80px;
-            background-color: #1e293b;
+            width: 90px;
+            background-color: #0f172a;
             border: 1px solid #475569;
             color: white;
-            padding: 6px;
+            padding: 8px;
             border-radius: 6px;
             text-align: center;
             font-size: 16px;
@@ -105,11 +121,13 @@
             background-color: #f59e0b;
             color: #0f172a;
             border: none;
-            padding: 10px;
+            padding: 12px;
             border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
             margin-top: 8px;
+            font-size: 14px;
+            text-transform: uppercase;
         }
         footer { text-align: center; font-size: 11px; color: #64748b; margin-top: auto; padding-top: 20px; }
     </style>
@@ -120,29 +138,28 @@
         <header>
             <div>
                 <h1>Family Control (DIESEL)</h1>
-                <p class="sector-title">DUBBO, NSW 2830</p>
+                <p class="sector-title">DUBBO, NSW</p>
             </div>
-            <!-- Click the gear to show/hide the price update board -->
-            <button class="admin-toggle" onclick="toggleAdmin()">⚙️</button>
+            <!-- Replaced glitchy gear icon with a concrete, visible text button -->
+            <button class="admin-toggle-btn" onclick="toggleAdmin()">Update Prices</button>
         </header>
 
         <!-- Hidden Price Pad Panel -->
         <div id="adminPanel" class="admin-panel">
-            <p class="admin-title">Fuel Desk: Update Pump Prices (¢)</p>
+            <p class="admin-title">Fuel Desk: Input Current Prices (¢)</p>
             <div id="adminInputs"></div>
-            <button class="save-btn" onclick="savePrices()">💾 Save & Recalculate</button>
+            <button class="save-btn" onclick="savePrices()">Save & Recalculate</button>
         </div>
 
-        <!-- Live Station Cards Display -->
+        <!-- Station Cards Display -->
         <div id="fuelList"></div>
 
         <footer>
-            🛠️ Tap the ⚙️ gear icon to manually sync active local board values.
+            🛠️ Tap the "UPDATE PRICES" button to open the dashboard manager.
         </footer>
     </div>
 
     <script>
-        // Baseline default pricing array profiles
         const defaultStations = [
             { id: 0, name: "Shell Dubbo", address: "Whylandra St", price: 184.9 },
             { id: 1, name: "Ampol Foodary", address: "Erskine St", price: 189.9 },
@@ -153,7 +170,6 @@
         let currentStations = [];
 
         window.onload = function() {
-            // Check if user already has saved values in local storage, otherwise use defaults
             const saved = localStorage.getItem('dubbo_diesel_prices');
             if (saved) {
                 currentStations = JSON.parse(saved);
@@ -189,17 +205,15 @@
                 station.price = parseFloat(inputVal) || station.price;
             });
             
-            // Save the data to memory storage
             localStorage.setItem('dubbo_diesel_prices', JSON.stringify(currentStations));
-            toggleAdmin(); // Close menu
-            renderDashboard(); // Re-sort and render cards
+            toggleAdmin(); 
+            renderDashboard(); 
         }
 
         function renderDashboard() {
             const listContainer = document.getElementById('fuelList');
             listContainer.innerHTML = "";
 
-            // Sort data array so the absolute cheapest Diesel price sits on top
             let sortedStations = [...currentStations];
             sortedStations.sort((a, b) => a.price - b.price);
             
@@ -217,7 +231,7 @@
                     <div>
                         <p class="station-name">${station.name}</p>
                         <p class="station-details">${station.address} • <strong>Diesel</strong></p>
-                        <a href="${mapLink}" target="_blank" class="map-btn">🗺️ Route directions</a>
+                        <a href="${mapLink}" target="_blank" class="map-btn">Route directions</a>
                     </div>
                     <div style="text-align: right;">
                         <span class="price-tag ${isCheapest ? 'best-price' : ''}">${station.price}¢</span>
@@ -231,6 +245,7 @@
     </script>
 </body>
 </html>
+
 
 
       
